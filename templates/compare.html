@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% block extra_head %}
+<meta property="og:title" content="Image comparison">
+<meta property="og:image" content="{{ url_for('compare_thumb', short_id=short_id, _external=True) }}">
+<meta property="og:type" content="website">
+{% endblock %}
 {% block content %}
 <h1 style="text-align: center">Comparing Images - ID: {{ short_id }}</h1>
 
