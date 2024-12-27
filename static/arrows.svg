@@ -1,0 +1,34 @@
+<svg 
+  width="100%" height="100%" 
+  viewBox="0 0 1024 512"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Left arrow (mirrored horizontally) -->
+  <polygon
+    fill="#ffffffc0"
+    points="
+      361.54,478
+      382.14,456.5
+      172.89,256
+      382.14,55.49
+      361.54,34
+      129.86,256
+      361.54,478
+    "
+  />
+  
+  <!-- Right arrow (original shape, shifted 512px to the right) -->
+  <polygon
+    fill="#ffffffc0"
+    points="
+      662.46,478
+      641.86,456.5
+      851.11,256
+      641.86,55.49
+      662.46,34
+      894.14,256
+      662.46,478
+    "
+  />
+</svg>
+

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 style="text-align: center">Comparing Images - ID: {{ short_id }}</h1>
+
+<div class="slider-wrapper">
+  <!-- Base Image B (full width) -->
+  <img 
+    src="{{ url_for('static', filename='uploads/' ~ image_b) }}" 
+    alt="Base Image" 
+    class="base-image"
+  />
+
+  <!-- Overlay container for Image A -->
+  <div class="overlay-image" id="overlayContainer">
+    <img 
+      src="{{ url_for('static', filename='uploads/' ~ image_a) }}" 
+      alt="Overlay Image" 
+      class="overlay-img"
+    />
+  </div>
+
+  <!-- Horizontal slider -->
+  <input
+    type="range"
+    id="slider"
+    class="slider"
+    min="0"
+    max="100"
+    value="50"
+    oninput="updateOverlay(this.value)"
+  />
+</div>
+
+<script>
+function updateOverlay(value) {
+  // value is a % from 0 to 100
+  // We apply that percentage to the overlay's width
+  const overlay = document.getElementById('overlayContainer');
+  overlay.style.width = value + '%';
+}
+</script>
+
+<style>
+/* --- Container that holds everything --- */
+.slider-wrapper {
+  position: relative;
+  width: 600px;           /* or 100%, or whatever suits your layout */
+  max-width: 100%;
+  margin: 20px auto;      /* center horizontally */
+  overflow: hidden;       /* so no scrollbars if overlay extends, etc. */
+  background: #000;       /* optional; remove if you don't want a black bg */
+}
+
+/* Base image (B) is always fully displayed behind the overlay */
+.base-image {
+  display: block;
+  width: 100%;
+  height: auto;           /* maintain aspect ratio */
+  object-fit: cover;      /* optional cropping behavior */
+}
+
+/* Overlay container: starts at 50% width (the “split”) */
+#overlayContainer {
+  --divider-width: 2px;   /* thickness of the line */
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(50% + var(--divider-width) / 2);
+  height: 100%;
+  overflow: hidden;       /* hide the rest of A so only partial is visible */
+}
+
+/* Overlay image (A) also stretches to fill overlay container */
+.overlay-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 0 0;   /* top-left corner */
+}
+
+/* A vertical dividing line at the right edge of the overlay */
+#overlayContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: calc(var(--divider-width) / -2);
+  width: var(--divider-width);
+  height: 100%;
+  background: #fff;       /* color of divider line */
+}
+
+/* --- Horizontal slider styling --- */
+.slider {
+  --thumb-size: 64px;     /* size of the thumb */
+
+  position: absolute;
+  top: 0;
+  bottom: 0;           /* put slider in center */
+  left: calc((100% + var(--thumb-size)) / 2);       /* center horizontally */
+  transform: translateX(-50%);
+  width: calc(100% + var(--thumb-size));
+  height: 100%;/* how wide the slider track is */
+  appearance: none;       /* remove default OS styling */
+  background: none;
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  z-index: 2;             /* on top of images */
+}
+
+/* Slider track (WebKit) */
+.slider::-webkit-slider-runnable-track {
+  /*
+  width: 100%;
+  height: 2px;
+  background: #ccc;
+  */
+}
+ 
+
+/* Slider thumb/handle (WebKit) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: var(--thumb-size);
+  height: 10%;
+  background: url("/static/arrows.svg") no-repeat center / contain;
+  border: 0;
+  margin-left: calc(var(--thumb-size) / -2);
+}
+
+/* For Firefox */
+.slider::-moz-range-track {
+  /*
+  width: 100%;
+  height: 2px;
+  background: #ccc;
+  */
+}
+.slider::-moz-range-thumb {
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  background: url("/static/arrows.svg") no-repeat center / contain;
+  border: 0;
+  cursor: pointer;
+  transform: translateX(-50%);
+}
+</style>
+{% endblock %}

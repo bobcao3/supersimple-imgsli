@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Compare Images with a Slider</h1>
+
+<form
+  hx-post="/upload"
+  hx-target="#uploadResponse"
+  hx-swap="innerHTML"
+  encType="multipart/form-data"
+  method="post"
+>
+  <div style="display: block">
+    <label for="imageA">Image A:</label>
+    <input type="file" name="imageA" accept="image/*" required>
+  </div>
+ 
+  <div style="display: block">
+    <label for="imageB">Image B:</label>
+    <input type="file" name="imageB" accept="image/*" required>
+  </div>
+
+  <button type="submit">Upload</button>
+</form>
+
+<!-- The response from /upload will be swapped into this div -->
+<div id="uploadResponse"></div>
+{% endblock %}
+

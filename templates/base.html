@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>{{ title if title else "Image Compare" }}</title>
+  <!-- Include HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+  <!-- Simple styling -->
+  <style>
+    body {
+      background-color: #333333;  /* Dark gray background */
+      color: #eeeeee;             /* Very light gray text */
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Dark mode (via user’s system preference) */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #333333; 
+        color: #eeeeee;
+      }
+    }
+
+    .page-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
