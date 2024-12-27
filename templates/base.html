@@ -7,21 +7,21 @@
   <script src="https://unpkg.com/htmx.org@1.9.2"></script>
   <!-- Simple styling -->
   <style>
+    :root {
+      --page-bg-color: #18181a;
+      --text-color: #f0f0f0;
+    }
+    [data-theme="dark"] {
+      --page-bg-color: #18181a;
+      --text-color: #f0f0f0;
+    }
+
     body {
-      background-color: #333333;  /* Dark gray background */
-      color: #eeeeee;             /* Very light gray text */
-      margin: 0;
-      font-family: Arial, sans-serif;
+        font-family: sans-serif;
+        background-color: var(--page-bg-color);
+        color: var(--text-color);
     }
-
-    /* Dark mode (via user’s system preference) */
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #333333; 
-        color: #eeeeee;
-      }
-    }
-
+    
     .page-container {
       max-width: 800px;
       margin: 0 auto;
