@@ -3,6 +3,68 @@
 {% block content %}
 <h1>Compare Images with a Slider</h1>
 
+<style>
+  .upload-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+  }
+  
+  .upload-region {
+    width: 45%;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .upload-region img {
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+  }
+
+  .hidden-input {
+    display: none;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .upload-button {
+    width: 100%; /* Same width as the upload regions */
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #555;
+    border: none;
+    border-radius: 5px;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .upload-button.enabled {
+    background-color: #28a745;
+    cursor: pointer;
+    opacity: 1;
+  }
+
+  .upload-button:hover.enabled {
+    background-color: #218838;
+  }
+</style>
+
 <form
   hx-post="/upload"
   hx-target="#uploadResponse"
@@ -10,20 +72,112 @@
   encType="multipart/form-data"
   method="post"
 >
-  <div style="display: block">
-    <label for="imageA">Image A:</label>
-    <input type="file" name="imageA" accept="image/*" required>
-  </div>
- 
-  <div style="display: block">
-    <label for="imageB">Image B:</label>
-    <input type="file" name="imageB" accept="image/*" required>
+  <div class="upload-container">
+    <!-- Upload Region for Image A -->
+    <div class="upload-region" id="uploadRegionA" onclick="document.getElementById('imageA').click()">
+      <span>Drag & Drop Image A Here or Click to Upload</span>
+      <img id="previewA" src="" alt="" style="display: none;">
+      <input
+        type="file"
+        id="imageA"
+        name="imageA"
+        accept="image/*"
+        class="hidden-input"
+        required
+        onchange="previewImage(this, 'previewA'); checkImagesSelected()"
+      >
+    </div>
+
+    <!-- Upload Region for Image B -->
+    <div class="upload-region" id="uploadRegionB" onclick="document.getElementById('imageB').click()">
+      <span>Drag & Drop Image B Here or Click to Upload</span>
+      <img id="previewB" src="" alt="" style="display: none;">
+      <input
+        type="file"
+        id="imageB"
+        name="imageB"
+        accept="image/*"
+        class="hidden-input"
+        required
+        onchange="previewImage(this, 'previewB'); checkImagesSelected()"
+      >
+    </div>
   </div>
 
-  <button type="submit">Upload</button>
+  <!-- Centered Upload Button -->
+  <div class="button-container">
+    <button
+      type="submit"
+      id="uploadButton"
+      class="upload-button"
+      disabled
+    >
+      Upload
+    </button>
+  </div>
 </form>
 
-<!-- The response from /upload will be swapped into this div -->
 <div id="uploadResponse"></div>
+
+<script>
+  // Function to preview the uploaded image
+  function previewImage(input, previewId) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+        preview.parentElement.querySelector("span").style.display = "none";
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Enable or disable the upload button based on images selected
+  function checkImagesSelected() {
+    const imageA = document.getElementById('imageA').files.length > 0;
+    const imageB = document.getElementById('imageB').files.length > 0;
+    const uploadButton = document.getElementById('uploadButton');
+
+    if (imageA && imageB) {
+      uploadButton.classList.add('enabled');
+      uploadButton.disabled = false;
+    } else {
+      uploadButton.classList.remove('enabled');
+      uploadButton.disabled = true;
+    }
+  }
+
+  // Drag and drop functionality
+  function enableDragAndDrop(regionId, inputId, previewId) {
+    const region = document.getElementById(regionId);
+    const input = document.getElementById(inputId);
+
+    region.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      region.style.borderColor = "#333";
+    });
+
+    region.addEventListener("dragleave", () => {
+      region.style.borderColor = "#ccc";
+    });
+
+    region.addEventListener("drop", (e) => {
+      e.preventDefault();
+      region.style.borderColor = "#ccc";
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        input.files = files;
+        previewImage(input, previewId);
+        checkImagesSelected();
+      }
+    });
+  }
+
+  enableDragAndDrop("uploadRegionA", "imageA", "previewA");
+  enableDragAndDrop("uploadRegionB", "imageB", "previewB");
+</script>
 {% endblock %}
 
